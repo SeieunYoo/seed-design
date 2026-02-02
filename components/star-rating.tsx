@@ -54,8 +54,8 @@ const StarIcon = ({ filled, half, size = "medium", onClick, onMouseEnter, disabl
           <>
             <defs>
               <linearGradient id={`half-gradient-${iconSize}`}>
-                <stop offset="50%" stopColor="#FFB800" />
-                <stop offset="50%" stopColor="#E0E0E0" />
+                <stop offset="50%" stopColor="var(--seed-color-warning, #FF9500)" />
+                <stop offset="50%" stopColor="var(--seed-color-gray-200, #E5E5EA)" />
               </linearGradient>
             </defs>
             <path
@@ -66,7 +66,7 @@ const StarIcon = ({ filled, half, size = "medium", onClick, onMouseEnter, disabl
         ) : (
           <path
             d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-            fill={filled ? "#FFB800" : "#E0E0E0"}
+            fill={filled ? "var(--seed-color-warning, #FF9500)" : "var(--seed-color-gray-200, #E5E5EA)"}
             style={{
               transition: "fill 0.2s ease",
             }}

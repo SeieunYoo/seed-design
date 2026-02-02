@@ -18,9 +18,11 @@ export default function ReviewPage() {
   const [content, setContent] = React.useState("");
   const [reviews, setReviews] = React.useState<Review[]>([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = React.useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setHasAttemptedSubmit(true);
 
     if (rating === 0) {
       return;
@@ -42,7 +44,17 @@ export default function ReviewPage() {
     setRating(0);
     setContent("");
     setIsSubmitting(false);
+    setHasAttemptedSubmit(false);
   };
+
+  const handleRatingChange = (newRating: number) => {
+    setRating(newRating);
+    if (hasAttemptedSubmit && newRating > 0) {
+      setHasAttemptedSubmit(false);
+    }
+  };
+
+  const showRatingError = hasAttemptedSubmit && rating === 0;
 
   return (
     <Box
@@ -75,15 +87,17 @@ export default function ReviewPage() {
               label="별점"
               description="서비스에 대한 만족도를 선택해 주세요"
               value={rating}
-              onValueChange={setRating}
+              onValueChange={handleRatingChange}
               size="large"
-              invalid={rating === 0}
-              errorMessage={rating === 0 ? "별점을 선택해 주세요" : undefined}
+              invalid={showRatingError}
+              errorMessage={showRatingError ? "별점을 선택해 주세요" : undefined}
+              showRequiredIndicator
+              required
             />
 
             <TextField
               label="후기 내용"
-              description="자세한 후기를 작성해 주세요"
+              description="자세한 후기를 작성해 주세요 (선택)"
               value={content}
               onValueChange={setContent}
               maxGraphemeCount={500}
@@ -100,7 +114,6 @@ export default function ReviewPage() {
               size="large"
               layout="fill"
               loading={isSubmitting}
-              disabled={rating === 0}
             >
               후기 등록하기
             </ActionButton>
