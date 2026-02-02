@@ -1,10 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { VStack, HStack, Text, Box } from "@seed-design/react";
 import { StarRating } from "@/components/star-rating";
-import { ActionButton } from "@/components/action-button";
-import { TextField, TextFieldTextarea } from "@/components/text-field";
 
 interface Review {
   id: string;
@@ -30,7 +27,6 @@ export default function ReviewPage() {
 
     setIsSubmitting(true);
 
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     const newReview: Review = {
@@ -57,32 +53,60 @@ export default function ReviewPage() {
   const showRatingError = hasAttemptedSubmit && rating === 0;
 
   return (
-    <Box
-      minHeight="100vh"
-      backgroundColor="bg"
-      padding="x6"
-    >
-      <VStack maxWidth="600px" marginX="auto" gap="x6">
+    <div style={{
+      minHeight: "100vh",
+      backgroundColor: "#F5F5F7",
+      padding: "24px",
+    }}>
+      <div style={{
+        maxWidth: "600px",
+        margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: "24px",
+      }}>
         {/* Header */}
-        <VStack gap="x2" alignItems="center" paddingY="x6">
-          <Text fontSize="headline3" fontWeight="bold" textAlign="center">
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "8px",
+          padding: "24px 0",
+        }}>
+          <h1 style={{
+            fontSize: "24px",
+            fontWeight: 700,
+            color: "#1a1a1a",
+            margin: 0,
+            textAlign: "center",
+          }}>
             후기 작성
-          </Text>
-          <Text fontSize="body2" color="fg.neutral-muted" textAlign="center">
+          </h1>
+          <p style={{
+            fontSize: "14px",
+            color: "#8E8E93",
+            margin: 0,
+            textAlign: "center",
+          }}>
             서비스 이용 경험을 공유해 주세요
-          </Text>
-        </VStack>
+          </p>
+        </div>
 
         {/* Review Form */}
-        <Box
-          as="form"
+        <form
           onSubmit={handleSubmit}
-          backgroundColor="bg.layer-fill"
-          borderRadius="x4"
-          padding="x5"
-          boxShadow="box-shadow-1"
+          style={{
+            backgroundColor: "#FFFFFF",
+            borderRadius: "16px",
+            padding: "24px",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+          }}
         >
-          <VStack gap="x5">
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}>
             <StarRating
               label="별점"
               description="서비스에 대한 만족도를 선택해 주세요"
@@ -95,86 +119,163 @@ export default function ReviewPage() {
               required
             />
 
-            <TextField
-              label="후기 내용"
-              description="자세한 후기를 작성해 주세요 (선택)"
-              value={content}
-              onValueChange={setContent}
-              maxGraphemeCount={500}
-            >
-              <TextFieldTextarea
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              <label style={{
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "#1a1a1a",
+              }}>
+                후기 내용
+              </label>
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 placeholder="서비스 이용 후기를 자유롭게 작성해 주세요..."
                 rows={4}
+                maxLength={500}
+                style={{
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #E5E5EA",
+                  fontSize: "14px",
+                  resize: "vertical",
+                  fontFamily: "inherit",
+                  outline: "none",
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#007AFF";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#E5E5EA";
+                }}
               />
-            </TextField>
+              <p style={{
+                fontSize: "12px",
+                color: "#8E8E93",
+                margin: 0,
+                textAlign: "right",
+              }}>
+                {content.length}/500
+              </p>
+            </div>
 
-            <ActionButton
+            <button
               type="submit"
-              variant="brand-solid"
-              size="large"
-              layout="fill"
-              loading={isSubmitting}
+              disabled={isSubmitting}
+              style={{
+                backgroundColor: "#007AFF",
+                color: "#FFFFFF",
+                border: "none",
+                borderRadius: "12px",
+                padding: "14px 20px",
+                fontSize: "16px",
+                fontWeight: 600,
+                cursor: isSubmitting ? "not-allowed" : "pointer",
+                opacity: isSubmitting ? 0.7 : 1,
+                transition: "all 0.2s ease",
+              }}
             >
-              후기 등록하기
-            </ActionButton>
-          </VStack>
-        </Box>
+              {isSubmitting ? "등록 중..." : "후기 등록하기"}
+            </button>
+          </div>
+        </form>
 
         {/* Reviews List */}
         {reviews.length > 0 && (
-          <VStack gap="x4">
-            <Text fontSize="headline4" fontWeight="bold">
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}>
+            <h2 style={{
+              fontSize: "18px",
+              fontWeight: 700,
+              color: "#1a1a1a",
+              margin: 0,
+            }}>
               작성된 후기 ({reviews.length})
-            </Text>
+            </h2>
 
-            <VStack gap="x3">
+            <div style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+            }}>
               {reviews.map((review) => (
-                <Box
+                <div
                   key={review.id}
-                  backgroundColor="bg.layer-fill"
-                  borderRadius="x3"
-                  padding="x4"
-                  boxShadow="box-shadow-1"
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: "12px",
+                    padding: "16px",
+                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                  }}
                 >
-                  <VStack gap="x3">
-                    <HStack justifyContent="space-between" alignItems="center">
+                  <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "12px",
+                  }}>
+                    <div style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}>
                       <StarRating
                         value={review.rating}
                         readOnly
                         size="small"
                       />
-                      <Text fontSize="caption2" color="fg.neutral-muted">
+                      <span style={{
+                        fontSize: "12px",
+                        color: "#8E8E93",
+                      }}>
                         {review.createdAt.toLocaleDateString("ko-KR")}
-                      </Text>
-                    </HStack>
+                      </span>
+                    </div>
                     {review.content && (
-                      <Text fontSize="body2" color="fg.neutral">
+                      <p style={{
+                        fontSize: "14px",
+                        color: "#3C3C43",
+                        margin: 0,
+                        lineHeight: 1.5,
+                      }}>
                         {review.content}
-                      </Text>
+                      </p>
                     )}
-                  </VStack>
-                </Box>
+                  </div>
+                </div>
               ))}
-            </VStack>
-          </VStack>
+            </div>
+          </div>
         )}
 
         {/* Empty State */}
         {reviews.length === 0 && (
-          <VStack
-            gap="x2"
-            alignItems="center"
-            paddingY="x8"
-          >
-            <Text fontSize="body1" color="fg.neutral-muted">
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "8px",
+            padding: "32px 0",
+          }}>
+            <p style={{
+              fontSize: "14px",
+              color: "#8E8E93",
+              margin: 0,
+            }}>
               아직 작성된 후기가 없습니다
-            </Text>
-            <Text fontSize="caption1" color="fg.neutral-muted">
+            </p>
+            <p style={{
+              fontSize: "12px",
+              color: "#AEAEB2",
+              margin: 0,
+            }}>
               첫 번째 후기를 남겨보세요
-            </Text>
-          </VStack>
+            </p>
+          </div>
         )}
-      </VStack>
-    </Box>
+      </div>
+    </div>
   );
 }

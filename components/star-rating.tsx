@@ -1,19 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { Field as SeedField, VisuallyHidden } from "@seed-design/react";
-import type { FieldLabelVariantProps } from "@seed-design/css/recipes/field-label";
 
-interface StarProps {
+interface StarIconProps {
   filled: boolean;
-  half?: boolean;
   size?: "small" | "medium" | "large";
   onClick?: () => void;
   onMouseEnter?: () => void;
   disabled?: boolean;
 }
 
-const StarIcon = ({ filled, half, size = "medium", onClick, onMouseEnter, disabled }: StarProps) => {
+const StarIcon = ({ filled, size = "medium", onClick, onMouseEnter, disabled }: StarIconProps) => {
   const sizeMap = {
     small: 20,
     medium: 28,
@@ -50,72 +47,35 @@ const StarIcon = ({ filled, half, size = "medium", onClick, onMouseEnter, disabl
           transition: "all 0.2s ease",
         }}
       >
-        {half ? (
-          <>
-            <defs>
-              <linearGradient id={`half-gradient-${iconSize}`}>
-                <stop offset="50%" stopColor="var(--seed-color-warning, #FF9500)" />
-                <stop offset="50%" stopColor="var(--seed-color-gray-200, #E5E5EA)" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-              fill={`url(#half-gradient-${iconSize})`}
-            />
-          </>
-        ) : (
-          <path
-            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-            fill={filled ? "var(--seed-color-warning, #FF9500)" : "var(--seed-color-gray-200, #E5E5EA)"}
-            style={{
-              transition: "fill 0.2s ease",
-            }}
-          />
-        )}
+        <path
+          d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+          fill={filled ? "#FF9500" : "#E5E5EA"}
+          style={{
+            transition: "fill 0.2s ease",
+          }}
+        />
       </svg>
     </button>
   );
 };
 
 export interface StarRatingProps {
-  /** Current rating value (0-5) */
   value?: number;
-  /** Default rating value */
   defaultValue?: number;
-  /** Callback when rating changes */
   onValueChange?: (value: number) => void;
-  /** Number of stars */
   max?: number;
-  /** Size of stars */
   size?: "small" | "medium" | "large";
-  /** Whether the rating is disabled */
   disabled?: boolean;
-  /** Whether the rating is read-only */
   readOnly?: boolean;
-  /** Label for the field */
   label?: React.ReactNode;
-  /** Label weight */
-  labelWeight?: FieldLabelVariantProps["weight"];
-  /** Indicator text */
-  indicator?: React.ReactNode;
-  /** Description text */
   description?: React.ReactNode;
-  /** Error message */
   errorMessage?: React.ReactNode;
-  /** Whether the field is invalid */
   invalid?: boolean;
-  /** Whether to show required indicator */
   showRequiredIndicator?: boolean;
-  /** Whether the field is required */
   required?: boolean;
-  /** Field name */
   name?: string;
 }
 
-/**
- * StarRating component for collecting user ratings
- * @see Follows seed-design patterns
- */
 export const StarRating = React.forwardRef<HTMLDivElement, StarRatingProps>(
   (
     {
@@ -127,13 +87,10 @@ export const StarRating = React.forwardRef<HTMLDivElement, StarRatingProps>(
       disabled = false,
       readOnly = false,
       label,
-      labelWeight,
-      indicator,
       description,
       errorMessage,
       invalid,
       showRequiredIndicator,
-      required,
       name,
     },
     ref,
@@ -161,29 +118,23 @@ export const StarRating = React.forwardRef<HTMLDivElement, StarRatingProps>(
       setHoverValue(null);
     };
 
-    const renderHeader = label || indicator;
-    const renderDescription = !!description;
-    const renderErrorMessage = errorMessage && invalid;
-    const renderFooter = renderDescription || renderErrorMessage;
-
     return (
-      <SeedField.Root
-        name={name}
-        disabled={disabled}
-        invalid={invalid}
-        readOnly={readOnly}
-        required={required}
-        ref={ref}
-      >
-        {renderHeader && (
-          <SeedField.Header>
-            <SeedField.Label weight={labelWeight}>
+      <div ref={ref} style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+        {label && (
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <label style={{ 
+              fontSize: "14px", 
+              fontWeight: 600, 
+              color: "#1a1a1a" 
+            }}>
               {label}
-              {showRequiredIndicator && <SeedField.RequiredIndicator />}
-              {indicator && <SeedField.IndicatorText>{indicator}</SeedField.IndicatorText>}
-            </SeedField.Label>
-          </SeedField.Header>
+              {showRequiredIndicator && (
+                <span style={{ color: "#FF3B30", marginLeft: "2px" }}>*</span>
+              )}
+            </label>
+          </div>
         )}
+        
         <div
           role="radiogroup"
           aria-label={typeof label === "string" ? label : "별점"}
@@ -205,32 +156,21 @@ export const StarRating = React.forwardRef<HTMLDivElement, StarRatingProps>(
               disabled={disabled || readOnly}
             />
           ))}
-          <VisuallyHidden>
-            <input
-              type="hidden"
-              name={name}
-              value={value}
-            />
-          </VisuallyHidden>
+          <input type="hidden" name={name} value={value} />
         </div>
-        {renderFooter && (
-          <SeedField.Footer>
-            {renderDescription &&
-              (renderErrorMessage ? (
-                <VisuallyHidden asChild>
-                  <SeedField.Description>{description}</SeedField.Description>
-                </VisuallyHidden>
-              ) : (
-                <SeedField.Description>{description}</SeedField.Description>
-              ))}
-            {renderErrorMessage && (
-              <SeedField.ErrorMessage>
-                {errorMessage}
-              </SeedField.ErrorMessage>
-            )}
-          </SeedField.Footer>
+
+        {description && !invalid && (
+          <p style={{ fontSize: "12px", color: "#8E8E93", margin: 0 }}>
+            {description}
+          </p>
         )}
-      </SeedField.Root>
+        
+        {errorMessage && invalid && (
+          <p style={{ fontSize: "12px", color: "#FF3B30", margin: 0 }}>
+            {errorMessage}
+          </p>
+        )}
+      </div>
     );
   },
 );
