@@ -1,4 +1,3 @@
-import "@seed-design/css/all.min.css";
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 
@@ -9,13 +8,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="ko"
-      data-seed
-      data-seed-user-color-scheme="light"
-      data-seed-color-mode="system"
-      suppressHydrationWarning
-    >
+    <html lang="ko" suppressHydrationWarning>
       <head>
         <meta name="color-scheme" content="light dark" />
       </head>
